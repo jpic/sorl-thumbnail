@@ -76,21 +76,16 @@ class Thumbnail(object):
             lockname = self.dest + '.lock'
             try:
                 os.open(lockname, os.O_WRONLY | os.O_EXCL | os.O_CREAT)
-                print "Locked"
                 time.sleep(5)
                 try:
-                    print "Generating"
                     self._do_generate()
                 finally:
-                    print "Unlinking lockfile"
                     os.unlink(lockname)
             except:
                 while os.path.exists(lockname):
                     # wait for the other process to remove the lock without
                     # leaking too much CPU
-                    print "Waiting for lock"
                     time.sleep(0.1)
-                print "Lockfile doesn't exist anymore, continuing"
 
     def _check_source_exists(self):
         """
